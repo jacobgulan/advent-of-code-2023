@@ -72,6 +72,10 @@ func isGamePossible(colorMap map[string]int, maxRed int, maxBlue int, maxGreen i
 	return maxRed >= colorMap["red"] && maxBlue >= colorMap["blue"] && maxGreen >= colorMap["green"]
 }
 
+func multiplyColors(red, blue, green int) int {
+	return red * blue * green
+}
+
 func main() {
 	// Get inputs from input.txt file
 	inputs := getInputs()
@@ -95,6 +99,19 @@ func main() {
 		}
 	}
 
-	fmt.Println(gameIDSum)
+	fmt.Println("Game ID sum is", gameIDSum)
 
+	// Part 2
+	// Multiply all the maximum values together for each game and sum them all together
+	totalPower := 0
+	for _, gameString := range inputs {
+		// Increment game number
+		gameNumber++
+		colorMap := parseGameString(gameString)
+
+		// Multiply the maximum values together
+		totalPower += multiplyColors(colorMap["red"], colorMap["blue"], colorMap["green"])
+	}
+
+	fmt.Println(("Total power is"), totalPower)
 }
