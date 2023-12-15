@@ -100,6 +100,45 @@ func FindMyPoints(inputMap map[int]map[string][]string) int {
 	return myPoints
 }
 
+func FindScratchcards(inputMap map[int]map[string][]string) int {
+	// The key is the card number
+	// The value is the number copies of the card including the original
+	var scratchCardMap map[int][]map[string][]string = make(map[int][]map[string][]string)
+
+	totalScratchCards := 0
+
+	// Store the original scratchcard and its copies in "scratchcards"
+	// Convert inputMap to scratchcards
+	for i := 1; i <= len(inputMap); i++ {
+		scratchCardMap[i] = []map[string][]string{inputMap[i]}
+	}
+
+	// Loop through each row
+	for i := 1; i <= len(scratchCardMap); i++ {
+		// Loop through each scratchcard
+		for _, scratchCard := range scratchCardMap[i] {
+			totalScratchCards++
+			matches := 0
+
+			for _, winningNumber := range scratchCard["winningNumbers"] {
+				for _, myNumber := range scratchCard["myNumbers"] {
+					// If the winning number matches my number, add it to the matches
+					if winningNumber == myNumber {
+						matches += 1
+					}
+				}
+			}
+
+			for j := 1; j <= matches; j++ {
+				// Add extra scratchcards for as many as there are found
+				scratchCardMap[j+i] = append(scratchCardMap[j+i], scratchCardMap[j+i][0])
+			}
+		}
+	}
+
+	return totalScratchCards
+}
+
 func Main() {
 	main()
 }
@@ -108,4 +147,6 @@ func main() {
 	inputMap := getInputs()
 	myPoints := FindMyPoints(inputMap)
 	fmt.Println("My points: ", myPoints)
+	totalScratchCards := FindScratchcards(inputMap)
+	fmt.Println("Total scratchcards: ", totalScratchCards)
 }
